@@ -1,6 +1,5 @@
 "use client";
 
-import { useEffect } from "react";
 import {
   MapContainer,
   TileLayer,
@@ -11,16 +10,24 @@ import {
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-// correcion por defecto
-const customIcon = new L.Icon({
-  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
-  iconRetinaUrl:
-    "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
-  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
-  iconSize: [25, 41],
-  iconAnchor: [12, 41],
-  popupAnchor: [1, -34],
-});
+// Función para generar pines de distinto color según el estado del reporte
+const crearIconoColor = (color: "red" | "gold" | "green" | "violet") =>
+  new L.Icon({
+    iconUrl: `https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-${color}.png`,
+    shadowUrl:
+      "https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png",
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41],
+  });
+
+const iconosPorEstado = {
+  perdido: crearIconoColor("red"),
+  avistado: crearIconoColor("gold"),
+  rescatado: crearIconoColor("green"),
+  seleccion: crearIconoColor("violet"),
+};
 
 export interface Reporte {
   id: string;
@@ -45,7 +52,6 @@ interface MapaProps {
   onSeleccionarCoordenadas: (lat: number, lng: number) => void;
 }
 
-// Subcomponente para detectar clics en el mapa y capturar coordenadas
 function SelectorUbicacion({
   onSeleccionar,
 }: {
@@ -67,7 +73,6 @@ export default function MapaPerritos({
   coordenadasSeleccionadas,
   onSeleccionarCoordenadas,
 }: MapaProps) {
-  // Coordenadas iniciales por defecto (31.7385, -106.4850 como el primer reporte)
   const centroInicial: [number, number] = [31.7385, -106.485];
 
   return (
@@ -84,12 +89,12 @@ export default function MapaPerritos({
 
         <SelectorUbicacion onSeleccionar={onSeleccionarCoordenadas} />
 
-        {/* Marcadores de todos los perritos en la base de datos */}
+        {/* Marcadores con color dinámico según su estado */}
         {reportes.map((rep) => (
           <Marker
             key={rep.id}
             position={[rep.latitud, rep.longitud]}
-            icon={customIcon}
+            icon={iconosPorEstado[rep.estado] || iconosPorEstado.avistado}
           >
             <Popup>
               <div className="p-1 max-w-[200px]">
@@ -127,14 +132,14 @@ export default function MapaPerritos({
           </Marker>
         ))}
 
-        {/* Marcador temporal cuando haces clic para crear un reporte nuevo */}
+        {/* Pin violeta para indicar dónde se creará el nuevo reporte */}
         {coordenadasSeleccionadas && (
           <Marker
             position={[
               coordenadasSeleccionadas.lat,
               coordenadasSeleccionadas.lng,
             ]}
-            icon={customIcon}
+            icon={iconosPorEstado.seleccion}
           >
             <Popup>
               <span className="font-semibold text-xs text-indigo-600">
