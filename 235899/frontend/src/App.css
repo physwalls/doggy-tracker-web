@@ -1,0 +1,91 @@
+.contenedor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+  padding: 20px;
+  background-color: #1a1a1a;
+  color: white;
+  min-height: 100vh;
+}
+
+.tablero {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  background-color: #333;
+  padding: 5px;
+  border-radius: 8px;
+  margin: 20px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+}
+
+.fila {
+  display: flex;
+  gap: 2px;
+}
+
+.celda {
+  width: 45px;
+  height: 45px;
+  background-color: #f0f0f0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.celda:hover {
+  background-color: #d1d1d1;
+}
+
+/* Estado visual de las celdas */
+.obstaculo {
+  background-color: #444 !important;
+  box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.5);
+}
+
+.inicio {
+  background-color: #4caf50 !important; /* Verde */
+}
+
+.meta {
+  background-color: #ff9800 !important; /* Naranja */
+}
+
+.ruta {
+  background-color: #2196f3 !important; /* Azul */
+  animation: brillar 0.5s ease-in-out forwards;
+}
+
+@keyframes brillar {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.btn-calcular {
+  padding: 12px 24px;
+  font-size: 18px;
+  background-color: #e91e63;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  text-transform: uppercase;
+  transition: background-color 0.2s;
+}
+
+.btn-calcular:hover {
+  background-color: #c2185b;
+  transform: translateY(-2px);
+}
